@@ -35,14 +35,25 @@
     }
 
     body {
-      background:
-        radial-gradient(circle at 12% -10%, rgba(229, 57, 53, 0.06), transparent 45%),
-        radial-gradient(circle at 88% 0%, rgba(229, 57, 53, 0.04), transparent 40%),
-        var(--bg-0);
       color: var(--text-hi);
       font-family: 'Inter', sans-serif;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('background.png') no-repeat center center;
+      background-size: cover;
+      opacity: 0.1;
+      z-index: -1;
+      pointer-events: none;
     }
 
     a {
@@ -325,9 +336,12 @@
     }
 
     @keyframes float {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: translateY(0) rotate(0deg);
       }
+
       50% {
         transform: translateY(-8px) rotate(1.5deg);
       }
@@ -578,9 +592,11 @@
       0% {
         box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.3);
       }
+
       70% {
         box-shadow: 0 0 0 10px rgba(229, 57, 53, 0);
       }
+
       100% {
         box-shadow: 0 0 0 0 rgba(229, 57, 53, 0);
       }
@@ -663,26 +679,26 @@
     <span class="music-icon">🔊</span>
   </button>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // Helper function to parse CSV lines
-      function parseCSV(text) {
-        const lines = text.trim().split("\n");
-        const headers = lines[0].split(",");
-        const data = [];
-        for (let i = 1; i < lines.length; i++) {
-          const cols = lines[i].split(",");
-          if (cols.length === headers.length) {
-            const row = {};
-            headers.forEach((header, index) => {
-              row[header.trim().toLowerCase()] = cols[index].trim();
-            });
-            data.push(row);
-          }
-        }
-        return data;
-      }
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCL5nTTKfpXPvAfETSwPnAPOyTXK8IF07o",
+      authDomain: "jesica-event.firebaseapp.com",
+      projectId: "jesica-event",
+      storageBucket: "jesica-event.firebasestorage.app",
+      messagingSenderId: "665593366219",
+      appId: "1:665593366219:web:d3db0160694db32996bd4e"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.addEventListener("DOMContentLoaded", () => {
       // Update UI function
       function updateUI(teamsData) {
         teamsData.forEach(row => {
@@ -712,34 +728,34 @@
         });
       }
 
-      // Function to fetch and update data
-      function fetchAndPopulate() {
-        // Append a cache-busting timestamp query parameter to prevent browser caching of the CSV file
-        fetch("master-tim.csv?t=" + new Date().getTime())
-          .then(response => {
-            if (!response.ok) {
-              throw new Error("Failed to load CSV: " + response.statusText);
-            }
-            return response.text();
-          })
-          .then(csvText => {
-            const parsedData = parseCSV(csvText);
-            updateUI(parsedData);
-          })
-          .catch(err => {
-            console.warn("Dynamic CSV fetch disabled or blocked (normal on file:// protocols).", err);
-            // Set initial points and medals for file:// fallback based on CSV file contents
-            const fallbackData = [
-              { tim: "ikn", kemenangan: "0" },
-              { tim: "asn", kemenangan: "0" },
-              { tim: "mbg", kemenangan: "0" },
-              { tim: "bbm", kemenangan: "0" },
-              { tim: "kdmp", kemenangan: "0" },
-              { tim: "idr", kemenangan: "0" }
-            ];
-            updateUI(fallbackData);
+      // Listen to Cloud Firestore master-tim collection changes
+      const collRef = collection(db, "master-tim");
+      onSnapshot(collRef, (querySnapshot) => {
+        const teamsData = [];
+        querySnapshot.forEach((doc) => {
+          teamsData.push({
+            tim: doc.id,
+            kemenangan: parseInt(doc.data().kemenangan, 10) || 0
           });
-      }
+        });
+
+        if (teamsData.length > 0) {
+          updateUI(teamsData);
+        } else {
+          // Default fallback data if database collection is empty
+          const fallbackData = [
+            { tim: "ikn", kemenangan: "0" },
+            { tim: "asn", kemenangan: "1" },
+            { tim: "mbg", kemenangan: "0" },
+            { tim: "bbm", kemenangan: "1" },
+            { tim: "kdmp", kemenangan: "0" },
+            { tim: "idr", kemenangan: "0" }
+          ];
+          updateUI(fallbackData);
+        }
+      }, (err) => {
+        console.error("Gagal menyinkronkan data Firestore:", err);
+      });
 
       // Background Music Controller Logic
       const music = document.getElementById("bgMusic");
@@ -793,12 +809,6 @@
           musicToggle.classList.remove("user-paused");
         }
       });
-
-      // Initial execution on DOM load
-      fetchAndPopulate();
-
-      // Automatically refresh every 15 seconds (15000 milliseconds)
-      setInterval(fetchAndPopulate, 15000);
     });
   </script>
 
