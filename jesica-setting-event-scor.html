@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Score Settings — Clash of Champions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-0: #FFFFFF;
+      --bg-1: #F9FAFB;
+      --card: #FFFFFF;
+      --card-line: #E5E7EB;
+      --gold: #E53935;
+      --gold-dim: #FFEBEE;
+      --text-hi: #111827;
+      --text-mid: #4B5563;
+      --text-low: #9CA3AF;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 12% -10%, rgba(229, 57, 53, 0.06), transparent 45%),
+        radial-gradient(circle at 88% 0%, rgba(229, 57, 53, 0.04), transparent 40%),
+        var(--bg-0);
+      color: var(--text-hi);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wrap {
+      max-width: 680px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 20px;
+      flex: 1;
+    }
+
+    /* ---------- HEADER ---------- */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header img.logo {
+      max-height: 120px;
+      margin-bottom: 12px;
+    }
+
+    .header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 28px;
+      background: linear-gradient(180deg, #E53935 0%, #B71C1C 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    /* ---------- CARD FORM ---------- */
+    .settings-card {
+      background: var(--card);
+      border: 1px solid var(--card-line);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    }
+
+    .team-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--card-line);
+    }
+
+    .team-row:last-of-type {
+      border-bottom: none;
+      margin-bottom: 24px;
+    }
+
+    .team-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .team-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--card-line);
+    }
+
+    .team-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .team-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .victory-input-group {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--card-line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg-1);
+    }
+
+    .victory-btn {
+      background: none;
+      border: none;
+      width: 36px;
+      height: 36px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-mid);
+      transition: background 0.2s;
+    }
+
+    .victory-btn:hover {
+      background: rgba(229, 57, 53, 0.08);
+      color: var(--gold);
+    }
+
+    .victory-input {
+      width: 50px;
+      height: 36px;
+      border: none;
+      background: none;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-hi);
+      outline: none;
+    }
+
+    /* Hide spinners */
+    .victory-input::-webkit-outer-spin-button,
+    .victory-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .points-preview {
+      width: 90px;
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--gold);
+    }
+
+    .points-preview span {
+      font-size: 11px;
+      color: var(--text-low);
+      font-weight: 500;
+      margin-left: 3px;
+    }
+
+    /* ---------- BUTTONS ---------- */
+    .btn-submit {
+      width: 100%;
+      background: var(--gold);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 20px rgba(229, 57, 53, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(229, 57, 53, 0.25);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+      width: 100%;
+      text-align: center;
+      color: var(--text-mid);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .btn-back:hover {
+      color: var(--gold);
+    }
+
+    /* ---------- LOCK SCREEN ---------- */
+    .lock-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s ease, visibility 0.4s;
+    }
+
+    .lock-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .lock-card {
+      background: var(--card);
+      border: 1px solid var(--card-line);
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+      transform: translateY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .lock-icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+
+    .lock-card h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .lock-card p {
+      color: var(--text-mid);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .input-pass {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--card-line);
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+      text-align: center;
+      margin-bottom: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-1);
+    }
+
+    .input-pass:focus {
+      border-color: var(--gold);
+    }
+
+    .lock-card.shake {
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+
+    /* ---------- TOAST ---------- */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #111827;
+      color: #FFFFFF;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s;
+      z-index: 999;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.error {
+      background: #EF4444;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Password Lock Overlay -->
+  <div class="lock-overlay" id="lockOverlay">
+    <div class="lock-card" id="lockCard">
+      <div class="lock-icon">🔒</div>
+      <h2>Akses Terkunci</h2>
+      <p>Masukkan password untuk mengelola poin tim</p>
+      <input type="password" class="input-pass" id="passwordInput" placeholder="Password Event">
+      <button class="btn-submit" id="btnUnlock">Buka Pengaturan</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="header">
+      <img src="logo.png" alt="JeSica Logo" class="logo">
+      <h1>Pengaturan Poin Event</h1>
+    </div>
+
+    <main class="settings-card">
+      <form id="settingsForm" onsubmit="event.preventDefault();">
+        <!-- IKN -->
+        <div class="team-row" data-team="ikn">
+          <div class="team-info">
+            <img src="ikn.png" alt="IKN" class="team-avatar">
+            <span class="team-name">TIM IKN</span>
+          </div>
+          <div class="team-controls">
+            <div class="victory-input-group">
+              <button type="button" class="victory-btn btn-minus">-</button>
+              <input type="number" class="victory-input" value="0" min="0">
+              <button type="button" class="victory-btn btn-plus">+</button>
+            </div>
+            <div class="points-preview">0<span>poin</span></div>
+          </div>
+        </div>
+
+        <!-- ASN -->
+        <div class="team-row" data-team="asn">
+          <div class="team-info">
+            <img src="asn.png" alt="ASN" class="team-avatar">
+            <span class="team-name">TIM ASN</span>
+          </div>
+          <div class="team-controls">
+            <div class="victory-input-group">
+              <button type="button" class="victory-btn btn-minus">-</button>
+              <input type="number" class="victory-input" value="0" min="0">
+              <button type="button" class="victory-btn btn-plus">+</button>
+            </div>
+            <div class="points-preview">0<span>poin</span></div>
+          </div>
+        </div>
+
+        <!-- MBG -->
+        <div class="team-row" data-team="mbg">
+          <div class="team-info">
+            <img src="mbg.png" alt="MBG" class="team-avatar">
+            <span class="team-name">TIM MBG</span>
+          </div>
+          <div class="team-controls">
+            <div class="victory-input-group">
+              <button type="button" class="victory-btn btn-minus">-</button>
+              <input type="number" class="victory-input" value="0" min="0">
+              <button type="button" class="victory-btn btn-plus">+</button>
+            </div>
+            <div class="points-preview">0<span>poin</span></div>
+          </div>
+        </div>
+
+        <!-- BBM -->
+        <div class="team-row" data-team="bbm">
+          <div class="team-info">
+            <img src="bbm.png" alt="BBM" class="team-avatar">
+            <span class="team-name">TIM BBM</span>
+          </div>
+          <div class="team-controls">
+            <div class="victory-input-group">
+              <button type="button" class="victory-btn btn-minus">-</button>
+              <input type="number" class="victory-input" value="0" min="0">
+              <button type="button" class="victory-btn btn-plus">+</button>
+            </div>
+            <div class="points-preview">0<span>poin</span></div>
+          </div>
+        </div>
+
+        <!-- KDMP -->
+        <div class="team-row" data-team="kdmp">
+          <div class="team-info">
+            <img src="kdmp.png" alt="KDMP" class="team-avatar">
+            <span class="team-name">TIM KDMP</span>
+          </div>
+          <div class="team-controls">
+            <div class="victory-input-group">
+              <button type="button" class="victory-btn btn-minus">-</button>
+              <input type="number" class="victory-input" value="0" min="0">
+              <button type="button" class="victory-btn btn-plus">+</button>
+            </div>
+            <div class="points-preview">0<span>poin</span></div>
+          </div>
+        </div>
+
+        <!-- IDR -->
+        <div class="team-row" data-team="idr">
+          <div class="team-info">
+            <img src="idr.png" alt="IDR" class="team-avatar">
+            <span class="team-name">TIM IDR</span>
+          </div>
+          <div class="team-controls">
+            <div class="victory-input-group">
+              <button type="button" class="victory-btn btn-minus">-</button>
+              <input type="number" class="victory-input" value="0" min="0">
+              <button type="button" class="victory-btn btn-plus">+</button>
+            </div>
+            <div class="points-preview">0<span>poin</span></div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnSave">Simpan Perubahan 💾</button>
+      </form>
+    </main>
+
+    <a href="/" class="btn-back">⬅ Kembali ke Scoreboard</a>
+  </div>
+
+  <div class="toast" id="toast">Data berhasil disimpan!</div>
+
+  <script src="script-event.js"></script>
+</body>
+</html>
